@@ -1,0 +1,30 @@
+{
+  "name": "API Code Samples",
+  // Pointer vers notre docker-compose.yml
+  "dockerComposeFile": [
+    "../docker-compose.yml"
+  ],
+  // Le service dans docker-compose.yml auquel on va attacher VSCode
+  "service": "vscode_api",
+  // Le dossier de travail précisé dans docker-compose.yml
+  "workspaceFolder": "/home/dev",
+  // Set *default* container specific settings.json values on container create.
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "editor.formatOnSave": true,
+        "typescript.tsdk": "node_modules/typescript/lib"
+      },
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "ms-vscode.vscode-typescript-next",
+        "redhat.vscode-yaml",
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-mysql"
+      ]
+    }
+  },
+  // Forwarding ports for development
+  "forwardPorts": [ 5050, 3306 ]
+}

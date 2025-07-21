@@ -1,0 +1,1743 @@
+{
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"IInfo": {
+				"properties": {
+					"title": {
+						"type": "string",
+						"description": "Nom de l'API"
+					},
+					"host": {
+						"type": "string",
+						"description": "Le nom d'hôte sur lequel l'API tourne"
+					},
+					"platform": {
+						"type": "string",
+						"description": "Le type de OS"
+					},
+					"type": {
+						"type": "string",
+						"description": "Le OS"
+					},
+					"database": {
+						"properties": {
+							"tables": {
+								"properties": {
+									"actor": {
+										"type": "number",
+										"format": "double"
+									},
+									"film": {
+										"type": "number",
+										"format": "double"
+									}
+								},
+								"type": "object"
+							},
+							"error": {
+								"type": "string"
+							},
+							"state": {
+								"type": "string",
+								"enum": [
+									"connected",
+									"disconnected"
+								]
+							}
+						},
+						"required": [
+							"state"
+						],
+						"type": "object",
+						"description": "Le statut de l'OS"
+					}
+				},
+				"required": [
+					"title",
+					"host",
+					"platform",
+					"type",
+					"database"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IStatus": {
+				"properties": {
+					"status": {
+						"type": "string"
+					},
+					"uptime": {
+						"type": "number",
+						"format": "double"
+					},
+					"timestamp": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"status",
+					"uptime",
+					"timestamp"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IMetrics": {
+				"properties": {
+					"memory": {
+						"properties": {
+							"usedPercentage": {
+								"type": "number",
+								"format": "double"
+							},
+							"used": {
+								"type": "number",
+								"format": "double"
+							},
+							"free": {
+								"type": "number",
+								"format": "double"
+							},
+							"total": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"usedPercentage",
+							"used",
+							"free",
+							"total"
+						],
+						"type": "object"
+					},
+					"cpu": {
+						"properties": {
+							"speed": {
+								"type": "number",
+								"format": "double"
+							},
+							"model": {
+								"type": "string"
+							},
+							"cores": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"speed",
+							"model",
+							"cores"
+						],
+						"type": "object"
+					},
+					"uptime": {
+						"type": "number",
+						"format": "double"
+					},
+					"requests": {
+						"properties": {
+							"error": {
+								"type": "number",
+								"format": "double"
+							},
+							"success": {
+								"type": "number",
+								"format": "double"
+							},
+							"total": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"error",
+							"success",
+							"total"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"memory",
+					"cpu",
+					"uptime",
+					"requests"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GraphQLRequest": {
+				"description": "Interface de requête GraphQL",
+				"properties": {
+					"query": {
+						"type": "string"
+					},
+					"variables": {
+						"properties": {},
+						"additionalProperties": {},
+						"type": "object"
+					},
+					"operationName": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"query"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IFilmCover": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"film_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"cover_path": {
+						"type": "string"
+					},
+					"file_type": {
+						"type": "string"
+					},
+					"file_size": {
+						"type": "number",
+						"format": "double"
+					},
+					"created_at": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updated_at": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"film_id",
+					"cover_path",
+					"file_type",
+					"file_size",
+					"created_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Film": {
+				"properties": {
+					"film_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"release_year": {
+						"type": "number",
+						"format": "double"
+					},
+					"language_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"original_language_id": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"rental_duration": {
+						"type": "number",
+						"format": "double"
+					},
+					"rental_rate": {
+						"type": "number",
+						"format": "double"
+					},
+					"length": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"replacement_cost": {
+						"type": "number",
+						"format": "double"
+					},
+					"rating": {
+						"type": "string"
+					},
+					"special_features": {
+						"type": "string",
+						"nullable": true
+					},
+					"last_update": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"film_id",
+					"title",
+					"description",
+					"release_year",
+					"language_id",
+					"original_language_id",
+					"rental_duration",
+					"rental_rate",
+					"length",
+					"replacement_cost",
+					"rating",
+					"special_features",
+					"last_update"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PaginatedFilms": {
+				"properties": {
+					"data": {
+						"items": {
+							"$ref": "#/components/schemas/Film"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"page": {
+						"type": "number",
+						"format": "double"
+					},
+					"pageSize": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"data",
+					"total",
+					"page",
+					"pageSize"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"FilmCreationParams": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"release_year": {
+						"type": "number",
+						"format": "double"
+					},
+					"language_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"original_language_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"rental_duration": {
+						"type": "number",
+						"format": "double"
+					},
+					"rental_rate": {
+						"type": "number",
+						"format": "double"
+					},
+					"length": {
+						"type": "number",
+						"format": "double"
+					},
+					"replacement_cost": {
+						"type": "number",
+						"format": "double"
+					},
+					"rating": {
+						"type": "string"
+					},
+					"special_features": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"title",
+					"release_year",
+					"language_id"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Partial_FilmCreationParams_": {
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"release_year": {
+						"type": "number",
+						"format": "double"
+					},
+					"language_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"original_language_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"rental_duration": {
+						"type": "number",
+						"format": "double"
+					},
+					"rental_rate": {
+						"type": "number",
+						"format": "double"
+					},
+					"length": {
+						"type": "number",
+						"format": "double"
+					},
+					"replacement_cost": {
+						"type": "number",
+						"format": "double"
+					},
+					"rating": {
+						"type": "string"
+					},
+					"special_features": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
+			},
+			"UserRole": {
+				"type": "string",
+				"enum": [
+					"admin",
+					"user"
+				]
+			},
+			"IUserPayload": {
+				"properties": {
+					"user_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"username": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"role": {
+						"$ref": "#/components/schemas/UserRole"
+					}
+				},
+				"required": [
+					"user_id",
+					"username",
+					"email",
+					"role"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IUserLoginResponse": {
+				"properties": {
+					"user": {
+						"$ref": "#/components/schemas/IUserPayload"
+					},
+					"token": {
+						"type": "string"
+					},
+					"refreshToken": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"user",
+					"token",
+					"refreshToken"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Actor": {
+				"properties": {
+					"actor_id": {
+						"type": "number",
+						"format": "double"
+					},
+					"first_name": {
+						"type": "string"
+					},
+					"last_name": {
+						"type": "string"
+					},
+					"last_update": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"actor_id",
+					"first_name",
+					"last_name",
+					"last_update"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PaginatedActors": {
+				"properties": {
+					"data": {
+						"items": {
+							"$ref": "#/components/schemas/Actor"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"page": {
+						"type": "number",
+						"format": "double"
+					},
+					"pageSize": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"data",
+					"total",
+					"page",
+					"pageSize"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ActorCreationParams": {
+				"properties": {
+					"first_name": {
+						"type": "string"
+					},
+					"last_name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"first_name",
+					"last_name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {
+			"jwt": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		}
+	},
+	"info": {
+		"title": "api",
+		"version": "1.0.0",
+		"description": "joel",
+		"license": {
+			"name": "ISC"
+		},
+		"contact": {
+			"name": "joel"
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	],
+	"paths": {
+		"/info": {
+			"get": {
+				"operationId": "GetInfo",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IInfo"
+								}
+							}
+						}
+					}
+				},
+				"description": "Récupérer les informations générales sur l'API",
+				"tags": [
+					"System"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/info/status": {
+			"get": {
+				"operationId": "GetStatus",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IStatus"
+								}
+							}
+						}
+					}
+				},
+				"description": "Vérifier l'état de l'API",
+				"tags": [
+					"System"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/info/metrics": {
+			"get": {
+				"operationId": "GetMetrics",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IMetrics"
+								}
+							}
+						}
+					}
+				},
+				"description": "Récupérer les métriques de performance",
+				"tags": [
+					"System"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/graphql": {
+			"post": {
+				"operationId": "Query",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"query": "{\n    films(first: 5) {\n      edges {\n        node {\n          film_id\n          title\n          description\n          actors {\n            actor_id\n            first_name\n            last_name\n          }\n        }\n      }\n      totalCount\n    }\n  }",
+											"variables": {}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Endpoint GraphQL\r\nPermet d'exécuter des requêtes GraphQL pour récupérer des données sur les films et les acteurs",
+				"tags": [
+					"GraphQL"
+				],
+				"security": [
+					{
+						"jwt": [
+							"user",
+							"admin"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"description": "La requête GraphQL à exécuter",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/GraphQLRequest",
+								"description": "La requête GraphQL à exécuter"
+							},
+							"example": {
+								"query": "{films(first: 5) { edges { node { film_id title description actors { actor_id first_name last_name } } } totalCount } }",
+								"variables": {}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/films/{filmId}/cover": {
+			"post": {
+				"operationId": "UploadCover",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IFilmCover"
+								}
+							}
+						}
+					}
+				},
+				"description": "Télécharger une image de couverture pour un film",
+				"tags": [
+					"Film Covers"
+				],
+				"security": [
+					{
+						"jwt": [
+							"create:film"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "filmId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"file": {
+										"type": "string",
+										"format": "binary"
+									}
+								},
+								"required": [
+									"file"
+								]
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetCover",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IFilmCover"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "Récupérer l'image de couverture d'un film",
+				"tags": [
+					"Film Covers"
+				],
+				"security": [
+					{
+						"jwt": [
+							"read:films"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "filmId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "DeleteCover",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"success": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"success"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Supprimer l'image de couverture d'un film",
+				"tags": [
+					"Film Covers"
+				],
+				"security": [
+					{
+						"jwt": [
+							"delete:film"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "filmId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/films": {
+			"get": {
+				"operationId": "GetFilms",
+				"responses": {
+					"200": {
+						"description": "Liste des films récupérée avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PaginatedFilms"
+								}
+							}
+						}
+					}
+				},
+				"description": "Récupère la liste de tous les films avec pagination",
+				"tags": [
+					"Films"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Numéro de la page (commence à 1)",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Nombre d'éléments par page",
+						"in": "query",
+						"name": "pageSize",
+						"required": false,
+						"schema": {
+							"default": 10,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "CreateFilm",
+				"responses": {
+					"201": {
+						"description": "Film créé avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Film"
+								}
+							}
+						}
+					}
+				},
+				"description": "Crée un nouveau film",
+				"tags": [
+					"Films"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"description": "Données du film à créer",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/FilmCreationParams",
+								"description": "Données du film à créer"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/films/{id}": {
+			"get": {
+				"operationId": "GetFilmById",
+				"responses": {
+					"200": {
+						"description": "Film récupéré avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/Film"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "Récupère un film par son identifiant",
+				"tags": [
+					"Films"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Identifiant unique du film",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "UpdateFilm",
+				"responses": {
+					"200": {
+						"description": "Film mis à jour avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/Film"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "Met à jour un film existant",
+				"tags": [
+					"Films"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"description": "Identifiant du film à mettre à jour",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Nouvelles données du film",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_FilmCreationParams_",
+								"description": "Nouvelles données du film"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteFilm",
+				"responses": {
+					"204": {
+						"description": "Film supprimé avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "boolean"
+								}
+							}
+						}
+					}
+				},
+				"description": "Supprime un film",
+				"tags": [
+					"Films"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"description": "Identifiant du film à supprimer",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/films/category/{categoryId}": {
+			"get": {
+				"operationId": "GetFilmsByCategory",
+				"responses": {
+					"200": {
+						"description": "Films par catégorie récupérés avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PaginatedFilms"
+								}
+							}
+						}
+					}
+				},
+				"description": "Récupère les films par catégorie",
+				"tags": [
+					"Films"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Identifiant de la catégorie",
+						"in": "path",
+						"name": "categoryId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Numéro de la page",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Nombre d'éléments par page",
+						"in": "query",
+						"name": "pageSize",
+						"required": false,
+						"schema": {
+							"default": 10,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/films/actor/{actorId}": {
+			"get": {
+				"operationId": "GetFilmsByActor",
+				"responses": {
+					"200": {
+						"description": "Films par acteur récupérés avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PaginatedFilms"
+								}
+							}
+						}
+					}
+				},
+				"description": "Récupère les films par acteur",
+				"tags": [
+					"Films"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Identifiant de l'acteur",
+						"in": "path",
+						"name": "actorId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Numéro de la page",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Nombre d'éléments par page",
+						"in": "query",
+						"name": "pageSize",
+						"required": false,
+						"schema": {
+							"default": 10,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/auth/register": {
+			"post": {
+				"operationId": "Register",
+				"responses": {
+					"200": {
+						"description": "Informations sur l'utilisateur et tokens d'authentification",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IUserLoginResponse"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "Enregistre un nouvel utilisateur",
+				"tags": [
+					"Authentication"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "Données d'enregistrement de l'utilisateur",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"password": {
+										"type": "string"
+									},
+									"email": {
+										"type": "string"
+									},
+									"username": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"password",
+									"email",
+									"username"
+								],
+								"type": "object",
+								"description": "Données d'enregistrement de l'utilisateur"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "Login successful",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/IUserLoginResponse"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "Authentifie un utilisateur",
+				"tags": [
+					"Authentication"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "Données de connexion de l'utilisateur",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"password": {
+										"type": "string"
+									},
+									"email": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"password",
+									"email"
+								],
+								"type": "object",
+								"description": "Données de connexion de l'utilisateur"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/renew": {
+			"post": {
+				"operationId": "RefreshToken",
+				"responses": {
+					"200": {
+						"description": "Nouveau token d'accès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"token": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"token"
+									],
+									"type": "object",
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "Rafraîchit un token d'accès",
+				"tags": [
+					"Authentication"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "Token de rafraîchissement",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"refreshToken": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"refreshToken"
+								],
+								"type": "object",
+								"description": "Token de rafraîchissement"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/verify": {
+			"get": {
+				"operationId": "VerifyToken",
+				"responses": {
+					"200": {
+						"description": "Informations sur l'utilisateur décodées du token",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IUserPayload"
+								}
+							}
+						}
+					}
+				},
+				"description": "Vérifie un token JWT",
+				"tags": [
+					"Authentication"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/auth/logout": {
+			"post": {
+				"operationId": "Logout",
+				"responses": {
+					"200": {
+						"description": "Statut de la déconnexion",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"success": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"success"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Déconnecte un utilisateur (révoque son refresh token)",
+				"tags": [
+					"Authentication"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"description": "Token de rafraîchissement à révoquer",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"refreshToken": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"refreshToken"
+								],
+								"type": "object",
+								"description": "Token de rafraîchissement à révoquer"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/actors": {
+			"get": {
+				"operationId": "GetActors",
+				"responses": {
+					"200": {
+						"description": "Liste des acteurs récupérée avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PaginatedActors"
+								}
+							}
+						}
+					}
+				},
+				"description": "Récupère la liste de tous les acteurs avec pagination",
+				"tags": [
+					"Actors"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Numéro de la page (commence à 1)",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Nombre d'éléments par page",
+						"in": "query",
+						"name": "pageSize",
+						"required": false,
+						"schema": {
+							"default": 10,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "CreateActor",
+				"responses": {
+					"201": {
+						"description": "Acteur créé avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Actor"
+								}
+							}
+						}
+					}
+				},
+				"description": "Crée un nouvel acteur",
+				"tags": [
+					"Actors"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"description": "Données de l'acteur à créer",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ActorCreationParams",
+								"description": "Données de l'acteur à créer"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/actors/{id}": {
+			"get": {
+				"operationId": "GetActorById",
+				"responses": {
+					"200": {
+						"description": "Acteur récupéré avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/Actor"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "Récupère un acteur par son identifiant",
+				"tags": [
+					"Actors"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Identifiant unique de l'acteur",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "UpdateActor",
+				"responses": {
+					"200": {
+						"description": "Acteur mis à jour avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/Actor"
+										}
+									],
+									"nullable": true
+								}
+							}
+						}
+					}
+				},
+				"description": "Met à jour un acteur existant",
+				"tags": [
+					"Actors"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"description": "Identifiant de l'acteur à mettre à jour",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Nouvelles données de l'acteur",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ActorCreationParams",
+								"description": "Nouvelles données de l'acteur"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteActor",
+				"responses": {
+					"204": {
+						"description": "Acteur supprimé avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "boolean"
+								}
+							}
+						}
+					}
+				},
+				"description": "Supprime un acteur",
+				"tags": [
+					"Actors"
+				],
+				"security": [
+					{
+						"jwt": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"description": "Identifiant de l'acteur à supprimer",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/actors/{id}/films": {
+			"get": {
+				"operationId": "GetActorFilms",
+				"responses": {
+					"200": {
+						"description": "Films de l'acteur récupérés avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"pageSize": {
+											"type": "number",
+											"format": "double"
+										},
+										"page": {
+											"type": "number",
+											"format": "double"
+										},
+										"total": {
+											"type": "number",
+											"format": "double"
+										},
+										"data": {
+											"items": {},
+											"type": "array"
+										}
+									},
+									"required": [
+										"pageSize",
+										"page",
+										"total",
+										"data"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Récupère les films d'un acteur spécifique",
+				"tags": [
+					"Actors"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Identifiant de l'acteur",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Numéro de la page",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Nombre d'éléments par page",
+						"in": "query",
+						"name": "pageSize",
+						"required": false,
+						"schema": {
+							"default": 10,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/user/{userId}/file": {
+			"post": {
+				"requestBody": {
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"file": {
+										"type": "string",
+										"format": "binary"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

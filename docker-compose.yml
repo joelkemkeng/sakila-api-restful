@@ -1,0 +1,114 @@
+version: '3.8'
+
+services:
+  # Service MariaDB (au lieu de MySQL)
+  dbms:
+    image: mariadb:latest
+    container_name: sakila-mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sakila
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      # Scripts d'initialisation dans l'ordre correct
+      - ./src/model/schema/00-init.sql:/docker-entrypoint-initdb.d/00-init.sql
+      - ./src/model/schema/00-fix-inventory.sql:/docker-entrypoint-initdb.d/00-fix-inventory.sql
+      - ./src/model/schema/01-schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./src/model/schema/02-data.sql:/docker-entrypoint-initdb.d/02-data.sql
+      - ./src/dbms/01_create_user_file_table.sql:/docker-entrypoint-initdb.d/03-user-files.sql
+      - ./src/model/schema/grant-privileges.sql:/docker-entrypoint-initdb.d/99-grant-privileges.sql
+    command: [
+      "--character-set-server=utf8mb4",
+      "--collation-server=utf8mb4_unicode_ci"
+    ]
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-u", "root", "--password=root"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - sakila-network
+
+  # Service API
+  api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: sakila-api
+    environment:
+      NODE_ENV: development
+      DB_HOST: dbms
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_DATABASE: sakila
+      PORT: 5050
+      JWT_SECRET: your-secure-jwt-secret-key
+    ports:
+      - "5050:5050"
+    depends_on:
+      dbms:
+        condition: service_healthy
+    networks:
+      - sakila-network
+    volumes:
+      - ./:/app
+      - /app/node_modules
+      - tsoa-cache:/app/src/routes
+    # Script amélioré qui gère la génération TSOA et attend la base de données
+    command: >
+      sh -c "
+        echo 'Attente que la base de données soit complètement initialisée...' &&
+        sleep 5 &&
+        echo 'Génération des routes TSOA...' &&
+        (npm run compile || (echo 'Erreur lors de la génération TSOA, utilisation des routes existantes' && exit 1)) &&
+        echo 'Démarrage du serveur...' &&
+        npm run server
+      "
+    restart: on-failure:3
+    # Augmentation des ressources pour TSOA
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 1G
+
+  # Service VS Code pour le développement compatible avec l'extension Remote Containers
+  vscode_api:
+    image: rg.fr-par.scw.cloud/api-code-samples-vscode/vscode_api:2.0.1
+    container_name: sakila-vscode
+    command: /bin/bash -c "while sleep 1000; do :; done"
+    working_dir: /home/dev
+    volumes:
+      - ./:/home/dev:cached
+    environment:
+      NODE_ENV: development
+      DB_HOST: dbms
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_DATABASE: sakila
+      PORT: 5050
+      JWT_SECRET: your-secure-jwt-secret-key
+    depends_on:
+      dbms:
+        condition: service_healthy
+    networks:
+      - sakila-network
+    labels:
+      api_logging: "true"
+
+volumes:
+  mysql-data:
+    name: sakila-mariadb-data
+  tsoa-cache:
+    name: sakila-tsoa-cache
+
+networks:
+  sakila-network:
+    driver: bridge
+    name: sakila-network

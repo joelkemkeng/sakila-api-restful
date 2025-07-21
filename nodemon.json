@@ -1,0 +1,10 @@
+{
+  "exec": "node db-init.js && npm run compile && ts-node -r tsconfig-paths/register src/server.ts",
+  "watch": [
+    "src"
+  ],
+  "ignore": [
+    "src/routes/routes.ts"
+  ],
+  "ext": "ts"
+}
