@@ -30,7 +30,7 @@ services:
       test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-u", "root", "--password=root"]
       interval: 5s
       timeout: 5s
-      retries: 10
+      retries: 20
     networks:
       - sakila-network
 
@@ -60,15 +60,7 @@ services:
       - /app/node_modules
       - tsoa-cache:/app/src/routes
     # Script amélioré qui gère la génération TSOA et attend la base de données
-    command: >
-      sh -c "
-        echo 'Attente que la base de données soit complètement initialisée...' &&
-        sleep 5 &&
-        echo 'Génération des routes TSOA...' &&
-        (npm run compile || (echo 'Erreur lors de la génération TSOA, utilisation des routes existantes' && exit 1)) &&
-        echo 'Démarrage du serveur...' &&
-        npm run server
-      "
+    command: ["/wait-db-and-init.sh"]
     restart: on-failure:3
     # Augmentation des ressources pour TSOA
     deploy:

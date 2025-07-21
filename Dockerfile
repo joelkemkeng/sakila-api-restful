@@ -14,6 +14,10 @@ COPY . .
 # Compiler le TypeScript
 RUN npm run compile
 
+# Ajouter le script d'attente et d'init de la base
+COPY wait-db-and-init.sh /wait-db-and-init.sh
+RUN chmod +x /wait-db-and-init.sh
+
 # Exposer le port de l'API
 EXPOSE 5050
 

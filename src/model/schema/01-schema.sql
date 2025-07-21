@@ -41,12 +41,37 @@ CREATE TABLE access_logs (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
-/* Table pour les tokens de rafraîchissement */
+/* Table pour stocker les fichiers des utilisateurs */
+DROP TABLE IF EXISTS user_files;
+CREATE TABLE user_files (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    file_name VARCHAR(255) NOT NULL,
+    file_path VARCHAR(255) NOT NULL,
+    file_type VARCHAR(50) NOT NULL,
+    file_size BIGINT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+/* Table pour stocker les couvertures des films */
+DROP TABLE IF EXISTS film_covers;
+CREATE TABLE film_covers (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    film_id SMALLINT UNSIGNED NOT NULL,
+    cover_path VARCHAR(255) NOT NULL,
+    file_type VARCHAR(100) DEFAULT NULL,
+    file_size BIGINT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (film_id) REFERENCES film(film_id) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
+/* Table pour les tokens de rafraîchissement (doit être créée après staff et customer) */
 DROP TABLE IF EXISTS refresh_tokens;
 CREATE TABLE refresh_tokens (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NULL,
-    staff_id SMALLINT UNSIGNED NULL,
+    staff_id TINYINT UNSIGNED NULL,
     customer_id SMALLINT UNSIGNED NULL,
     token VARCHAR(255) NOT NULL,
     expires_at TIMESTAMP NULL DEFAULT NULL,
@@ -75,30 +100,5 @@ VALUES (
         '$2b$10$P.dO5r5zkiy.HIZ/Uye1E.XBSqEi6.u4i95.jT8PnCnBVcVoQSF7y',
         'customer'
     );
-/* Table pour stocker les fichiers des utilisateurs */
-DROP TABLE IF EXISTS user_files;
-CREATE TABLE user_files (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    file_name VARCHAR(255) NOT NULL,
-    file_path VARCHAR(255) NOT NULL,
-    file_type VARCHAR(50) NOT NULL,
-    file_size BIGINT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
-/* Table pour stocker les couvertures des films */
-DROP TABLE IF EXISTS film_covers;
-CREATE TABLE film_covers (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    film_id SMALLINT UNSIGNED NOT NULL,
-    cover_path VARCHAR(255) NOT NULL,
-    file_type VARCHAR(100) DEFAULT NULL,
-    file_size BIGINT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (film_id) REFERENCES film(film_id) ON DELETE CASCADE
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci;
 /* Réactiver les vérifications de clés étrangères */
 SET FOREIGN_KEY_CHECKS = 1;
