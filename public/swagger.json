@@ -676,7 +676,7 @@
 						}
 					}
 				},
-				"description": "Endpoint GraphQL\r\nPermet d'exécuter des requêtes GraphQL pour récupérer des données sur les films et les acteurs",
+				"description": "Endpoint GraphQL\nPermet d'exécuter des requêtes GraphQL pour récupérer des données sur les films et les acteurs",
 				"tags": [
 					"GraphQL"
 				],

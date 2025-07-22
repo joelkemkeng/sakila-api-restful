@@ -2,6 +2,9 @@ FROM node:18-alpine
 
 WORKDIR /app
 
+# Installer le client MySQL/MariaDB pour le script d'attente
+RUN apk add --no-cache mysql-client
+
 # Copier les fichiers package.json et package-lock.json
 COPY package*.json ./
 
@@ -22,4 +25,4 @@ RUN chmod +x /wait-db-and-init.sh
 EXPOSE 5050
 
 # Script de démarrage qui attend que MySQL soit prêt puis initialise la BD
-CMD ["node", "--host", "0.0.0.0", "build/server.js"]
+CMD ["/wait-db-and-init.sh"]
