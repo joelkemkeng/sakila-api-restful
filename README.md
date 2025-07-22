@@ -3,54 +3,27 @@
 ## 📋 Présentation de l'API
 L'API Sakila est une interface RESTful permettant d'accéder et de gérer les données du célèbre exemple de base de données Sakila (films, acteurs, locations). Elle implémente une authentification JWT avec différents niveaux d'accès (customer, staff, admin) et offre des fonctionnalités complètes de CRUD.
 
-## 📥 Téléchargement depuis GitLab
+## 📥 Installation et démarrage
+
+### 1. Cloner le projet
 ```bash
 git clone https://github.com/joelkemkeng/sakila-api-restful.git
-cd sakila-api
+cd sakila-api-restful
 ```
 
-## 🛠 Mise en place
-
-### 1. Installation des dépendances
+### 2. Démarrer avec Docker Compose
 ```bash
-npm init
-npm install express
-npm install nodemon --save-dev
-npm install
-npm install winston
-npm install --save-dev rimraf
-npm install --save-dev copyfiles
-```
-
-### 2. Configuration de l'environnement
-```bash
-cp .env.example .env
-```
-Éditez `.env` avec vos credentials MySQL :
-```env
-DB_HOST=localhost
-DB_PORT=3306
-DB_USER=root
-DB_PASSWORD=root
-DB_NAME=sakila
-JWT_SECRET=root
-```
-
-### 3. Lancement du conteneur avec Docker
-```bash
-# Démarrer les conteneurs
 docker-compose up -d
-
-# Accéder au shell du conteneur API
-docker exec -it sakila-api sh
-
-# Lancer le serveur à l'intérieur du conteneur
-npm run server
-
-# Réssayer une seconde fois si une erreur survient
 ```
 
-> **Attention** : Si localhost ne fonctionne pas, essayez d'utiliser directement l'adresse IP 127.0.0.1 (par exemple http://127.0.0.1:5050/api-docs au lieu de http://localhost:5050/api-docs).
+### 3. Attendre le démarrage complet
+⚠️ **Important** : Veuillez patienter **2 à 5 minutes** après le lancement de `docker-compose up -d` pour que tous les services se démarrent correctement (base de données, initialisation des données, API).
+
+### 4. Accéder à l'API
+Une fois l'attente terminée, l'API sera disponible sur :
+**http://localhost:5050/api-docs/**
+
+> **Note** : Si localhost ne fonctionne pas, essayez d'utiliser directement l'adresse IP 127.0.0.1 (http://127.0.0.1:5050/api-docs).
 
 ## ✅ Fonctionnalités implémentées
 - **Authentification** : Register, Login, Refresh Token, Logout
