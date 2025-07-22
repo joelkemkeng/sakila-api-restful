@@ -15,26 +15,26 @@ services:
       - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
-      # Scripts d'initialisation dans l'ordre correct - ON ÉVITE L'INIT AUTO
-      # - ./src/model/schema/00-reset-root-password.sql:/docker-entrypoint-initdb.d/00-reset-root-password.sql
-      # - ./src/model/schema/00-init.sql:/docker-entrypoint-initdb.d/01-init.sql
-      # - ./src/model/schema/01-schema.sql:/docker-entrypoint-initdb.d/02-schema.sql
-      # - ./src/model/schema/02-data.sql:/docker-entrypoint-initdb.d/03-data.sql
-      # - ./src/model/schema/00-fix-inventory.sql:/docker-entrypoint-initdb.d/04-fix-inventory.sql
-      # - ./src/dbms/01_create_user_file_table.sql:/docker-entrypoint-initdb.d/05-user-files.sql
-      # - ./src/model/schema/grant-privileges.sql:/docker-entrypoint-initdb.d/99-grant-privileges.sql
+      # Scripts d'initialisation dans l'ordre correct
+      - ./src/model/schema/00-reset-root-password.sql:/docker-entrypoint-initdb.d/00-reset-root-password.sql
+      - ./src/model/schema/00-init.sql:/docker-entrypoint-initdb.d/01-init.sql
+      - ./src/model/schema/01-schema.sql:/docker-entrypoint-initdb.d/02-schema.sql
+      - ./src/model/schema/02-data.sql:/docker-entrypoint-initdb.d/03-data.sql
+      - ./src/model/schema/00-fix-inventory.sql:/docker-entrypoint-initdb.d/04-fix-inventory.sql
+      - ./src/dbms/01_create_user_file_table.sql:/docker-entrypoint-initdb.d/05-user-files.sql
+      - ./src/model/schema/grant-privileges.sql:/docker-entrypoint-initdb.d/99-grant-privileges.sql
     command: [
       "--character-set-server=utf8mb4",
       "--collation-server=utf8mb4_unicode_ci",
       "--innodb-buffer-pool-size=256M",
       "--max-connections=100"
     ]
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
-      interval: 10s
-      timeout: 10s
-      retries: 30
-      start_period: 30s
+    # healthcheck:
+      # test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      # interval: 5s
+      # timeout: 5s
+      # retries: 20
+      # start_period: 30s
     networks:
       - sakila-network
 
@@ -55,8 +55,7 @@ services:
     ports:
       - "5050:5050"
     depends_on:
-      dbms:
-        condition: service_healthy
+      - dbms
     networks:
       - sakila-network
     volumes:
@@ -89,8 +88,7 @@ services:
       PORT: 5050
       JWT_SECRET: your-secure-jwt-secret-key
     depends_on:
-      dbms:
-        condition: service_healthy
+      - dbms
     networks:
       - sakila-network
     labels:
