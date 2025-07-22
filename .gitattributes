@@ -1,0 +1,25 @@
+# Assurer que les scripts shell ont toujours des fins de ligne Unix (LF)
+*.sh text eol=lf
+
+# Forcer les fins de ligne Unix pour les scripts spécifiques
+wait-db-and-init.sh text eol=lf
+redeploy.sh text eol=lf
+check-containers.sh text eol=lf
+test-deployment.sh text eol=lf
+
+# Configurer les autres types de fichiers
+*.js text eol=lf
+*.ts text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.sql text eol=lf
+
+# Fichiers binaires
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
