@@ -6,7 +6,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { ApiError } from '../utility/error/ApiError';
 import { ErrorCode } from '../utility/error/ErrorCode';
-import { Permission } from '../middleware/auth.middleware';
 
 @Route('films')
 @Tags('Film Covers')
@@ -23,7 +22,7 @@ export class FilmCoverController {
     /**
      * Télécharger une image de couverture pour un film
      */
-    @Security('jwt', [Permission.CREATE_FILM])
+    @Security('jwt', ['admin'])
     @Post('{filmId}/cover')
     public async uploadCover(
         @Path() filmId: number,
@@ -67,7 +66,7 @@ export class FilmCoverController {
     /**
      * Récupérer l'image de couverture d'un film
      */
-    @Security('jwt', [Permission.READ_FILMS])
+    @Security('jwt', ['user', 'admin'])
     @Get('{filmId}/cover')
     public async getCover(@Path() filmId: number): Promise<IFilmCover | null> {
         const db = DB.Connection;
@@ -97,7 +96,7 @@ export class FilmCoverController {
     /**
      * Supprimer l'image de couverture d'un film
      */
-    @Security('jwt', [Permission.DELETE_FILM])
+    @Security('jwt', ['admin'])
     @Delete('{filmId}/cover')
     public async deleteCover(@Path() filmId: number): Promise<{ success: boolean }> {
         const db = DB.Connection;

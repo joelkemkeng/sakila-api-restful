@@ -45,7 +45,29 @@ for table in users film actor; do
   echo "Table $table prête ✓"
 done
 
-echo "Base et tables prêtes, lancement de l'API..."
+echo "Application des corrections utilisateurs..."
+
+# Correction des rôles existants pour être compatible avec le système (admin/user seulement)
+echo "Correction des rôles utilisateurs..."
+mysql -h"$DB_HOST" -u"$DB_USER" -p"$DB_PASSWORD" "$DB_DATABASE" -e "
+UPDATE users SET role = 'admin' WHERE user_id = 1 AND role != 'admin';
+UPDATE users SET role = 'user' WHERE user_id = 2 AND role != 'user';  
+UPDATE users SET role = 'user' WHERE user_id = 3 AND role != 'user';
+" || echo "Avertissement: Impossible de corriger les rôles existants"
+
+# Création d'utilisateurs de test avec des mots de passe connus (hash pour 'password')
+echo "Création des utilisateurs de test..."
+mysql -h"$DB_HOST" -u"$DB_USER" -p"$DB_PASSWORD" "$DB_DATABASE" -e "
+INSERT IGNORE INTO users (username, email, password_hash, role, is_active, email_verified, created_at, updated_at) VALUES
+  ('testadmin', 'testadmin@test.com', '\$2a\$10\$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', 1, 1, NOW(), NOW()),
+  ('testuser', 'testuser@test.com', '\$2a\$10\$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user', 1, 1, NOW(), NOW());
+" && echo "Utilisateurs de test créés ✓" || echo "Avertissement: Utilisateurs de test déjà existants"
+
+echo "Informations de connexion pour les tests:"
+echo "  Admin: testadmin@test.com / password"
+echo "  User:  testuser@test.com / password"
+
+echo "Base et tables prêtes, compilation des routes TSOA..."
 npm run compile || echo "Erreur de compilation, on continue avec les routes existantes"
 
 echo "Démarrage du serveur API..."
