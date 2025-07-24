@@ -7,6 +7,87 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"IUserFile": {
+				"description": "Interface représentant un fichier associé à un utilisateur dans le système",
+				"properties": {
+					"fileId": {
+						"type": "number",
+						"format": "double",
+						"description": "ID unique du fichier"
+					},
+					"userId": {
+						"type": "number",
+						"format": "double",
+						"description": "ID de l'utilisateur propriétaire du fichier"
+					},
+					"storageKey": {
+						"type": "string",
+						"description": "Clé de stockage du fichier (chemin dans le système de stockage)"
+					},
+					"filename": {
+						"type": "string",
+						"description": "Nom original du fichier"
+					},
+					"mimeType": {
+						"type": "string",
+						"description": "Type MIME du fichier"
+					},
+					"size": {
+						"type": "number",
+						"format": "double",
+						"description": "Taille du fichier en octets"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time",
+						"description": "Date de création du fichier"
+					},
+					"publicUrl": {
+						"type": "string",
+						"description": "URL publique du fichier (si applicable)"
+					}
+				},
+				"required": [
+					"fileId",
+					"userId",
+					"storageKey",
+					"filename",
+					"mimeType"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IORMIndexResponse_IUserFile_": {
+				"description": "Réspone à une opération de lecture de plusieurs lignes.",
+				"properties": {
+					"page": {
+						"type": "number",
+						"format": "double"
+					},
+					"limit": {
+						"type": "number",
+						"format": "double"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"rows": {
+						"items": {
+							"$ref": "#/components/schemas/IUserFile"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"page",
+					"limit",
+					"total",
+					"rows"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"IInfo": {
 				"properties": {
 					"title": {
@@ -586,6 +667,52 @@
 		}
 	],
 	"paths": {
+		"/user/{userId}/file/{fileId}": {
+			"get": {
+				"operationId": "DownloadFile",
+				"responses": {
+					"200": {
+						"description": "Fichier téléchargé",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"description": "Télécharge un fichier spécifique",
+				"tags": [
+					"UserFiles"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "ID de l'utilisateur",
+						"in": "path",
+						"name": "userId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "ID du fichier",
+						"in": "path",
+						"name": "fileId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
 		"/info": {
 			"get": {
 				"operationId": "GetInfo",
@@ -729,7 +856,7 @@
 				"security": [
 					{
 						"jwt": [
-							"create:film"
+							"admin"
 						]
 					}
 				],
@@ -790,7 +917,8 @@
 				"security": [
 					{
 						"jwt": [
-							"read:films"
+							"user",
+							"admin"
 						]
 					}
 				],
@@ -835,7 +963,7 @@
 				"security": [
 					{
 						"jwt": [
-							"delete:film"
+							"admin"
 						]
 					}
 				],
@@ -891,6 +1019,15 @@
 						"required": false,
 						"schema": {
 							"default": 10,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
 							"format": "double",
 							"type": "number"
 						}
@@ -1058,6 +1195,41 @@
 				"parameters": [
 					{
 						"description": "Identifiant du film à supprimer",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/films/{id}/actors": {
+			"get": {
+				"operationId": "GetFilmActors",
+				"responses": {
+					"200": {
+						"description": "Acteurs du film récupérés avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Récupère les acteurs d'un film",
+				"tags": [
+					"Films"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Identifiant du film",
 						"in": "path",
 						"name": "id",
 						"required": true,
@@ -1721,6 +1893,102 @@
 			}
 		},
 		"/user/{userId}/file": {
+			"put": {
+				"operationId": "UploadFile",
+				"responses": {
+					"201": {
+						"description": "Fichier uploadé avec succès",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IUserFile"
+								}
+							}
+						}
+					}
+				},
+				"description": "Upload un fichier pour un utilisateur",
+				"tags": [
+					"UserFiles"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "ID de l'utilisateur",
+						"in": "path",
+						"name": "userId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"file": {
+										"type": "string",
+										"format": "binary",
+										"description": "Fichier à uploader"
+									},
+									"filename": {
+										"type": "string",
+										"description": "Nom du fichier (optionnel)"
+									}
+								},
+								"required": [
+									"file"
+								]
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "ShowFiles",
+				"responses": {
+					"200": {
+						"description": "Liste des fichiers récupérée",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/IORMIndexResponse_IUserFile_"
+								}
+							}
+						}
+					}
+				},
+				"description": "Récupère la liste des fichiers d'un utilisateur",
+				"tags": [
+					"UserFiles"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "ID de l'utilisateur",
+						"in": "path",
+						"name": "userId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
 			"post": {
 				"requestBody": {
 					"content": {

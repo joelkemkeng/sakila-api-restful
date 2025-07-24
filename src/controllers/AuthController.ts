@@ -40,10 +40,10 @@ export class AuthController extends Controller {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
 
-      // Insérer l'utilisateur dans la base de données avec rôle par défaut 'customer'
+      // Insérer l'utilisateur dans la base de données avec rôle par défaut 'user'
       const [result] = await this.db.query<ResultSetHeader>(
         'INSERT INTO users (username, email, password_hash, role, is_active, email_verified) VALUES (?, ?, ?, ?, ?, ?)',
-        [username, email, hashedPassword, 'customer', true, false]
+        [username, email, hashedPassword, 'user', true, false]
       );
 
       // Récupérer l'utilisateur créé

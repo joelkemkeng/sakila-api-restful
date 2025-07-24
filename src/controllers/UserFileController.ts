@@ -30,7 +30,7 @@ export class UserFileController extends Controller {
 
     // Enregistrer en base de données
     const result = await ORM.Create<IUserFile>({
-      table: 'user_file',
+      table: 'user_files',
       data: {
         userId,
         storageKey,
@@ -55,7 +55,7 @@ export class UserFileController extends Controller {
     @Path() userId: number
   ): Promise<IORMIndexResponse<IUserFile>> {
     return await ORM.Index<IUserFile>({
-      table: 'user_file',
+      table: 'user_files',
       columns: ['fileId', 'userId', 'storageKey', 'filename', 'mimeType', 'size', 'createdAt'],
       where: { userId }
     });
@@ -75,7 +75,7 @@ export class UserFileController extends Controller {
   ): Promise<any> {
     // Récupérer les informations du fichier
     const fileInfo = await ORM.Show<IUserFile>({
-      table: 'user_file',
+      table: 'user_files',
       primaryKey: 'fileId',
       id: fileId,
       where: { userId }

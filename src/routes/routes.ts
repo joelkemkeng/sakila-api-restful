@@ -4,6 +4,8 @@
 import type { TsoaRoute } from '@tsoa/runtime';
 import {  fetchMiddlewares, ExpressTemplateService } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { UserFileController } from './../controllers/UserFileController';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { InfoController } from './../controllers/InfoController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { GraphQLController } from './../controllers/GraphQLController';
@@ -27,6 +29,32 @@ const expressAuthenticationRecasted = expressAuthentication as (req: ExRequest, 
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
 const models: TsoaRoute.Models = {
+    "IUserFile": {
+        "dataType": "refObject",
+        "properties": {
+            "fileId": {"dataType":"double","required":true},
+            "userId": {"dataType":"double","required":true},
+            "storageKey": {"dataType":"string","required":true},
+            "filename": {"dataType":"string","required":true},
+            "mimeType": {"dataType":"string","required":true},
+            "size": {"dataType":"double"},
+            "createdAt": {"dataType":"datetime"},
+            "publicUrl": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "IORMIndexResponse_IUserFile_": {
+        "dataType": "refObject",
+        "properties": {
+            "page": {"dataType":"double","required":true},
+            "limit": {"dataType":"double","required":true},
+            "total": {"dataType":"double","required":true},
+            "rows": {"dataType":"array","array":{"dataType":"refObject","ref":"IUserFile"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "IInfo": {
         "dataType": "refObject",
         "properties": {
@@ -213,6 +241,108 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
     const upload = opts?.multer ||  multer({"limits":{"fileSize":8388608}});
 
     
+        const argsUserFileController_uploadFile: Record<string, TsoaRoute.ParameterSchema> = {
+                userId: {"in":"path","name":"userId","required":true,"dataType":"double"},
+                file: {"in":"formData","name":"file","required":true,"dataType":"file"},
+                filename: {"in":"formData","name":"filename","dataType":"string"},
+        };
+        app.put('/user/:userId/file',
+            authenticateMiddleware([{"jwt":[]}]),
+            upload.fields([
+                {
+                    name: "file",
+                    maxCount: 1
+                }
+            ]),
+            ...(fetchMiddlewares<RequestHandler>(UserFileController)),
+            ...(fetchMiddlewares<RequestHandler>(UserFileController.prototype.uploadFile)),
+
+            async function UserFileController_uploadFile(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsUserFileController_uploadFile, request, response });
+
+                const controller = new UserFileController();
+
+              await templateService.apiHandler({
+                methodName: 'uploadFile',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 201,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsUserFileController_showFiles: Record<string, TsoaRoute.ParameterSchema> = {
+                userId: {"in":"path","name":"userId","required":true,"dataType":"double"},
+        };
+        app.get('/user/:userId/file',
+            authenticateMiddleware([{"jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(UserFileController)),
+            ...(fetchMiddlewares<RequestHandler>(UserFileController.prototype.showFiles)),
+
+            async function UserFileController_showFiles(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsUserFileController_showFiles, request, response });
+
+                const controller = new UserFileController();
+
+              await templateService.apiHandler({
+                methodName: 'showFiles',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsUserFileController_downloadFile: Record<string, TsoaRoute.ParameterSchema> = {
+                userId: {"in":"path","name":"userId","required":true,"dataType":"double"},
+                fileId: {"in":"path","name":"fileId","required":true,"dataType":"double"},
+        };
+        app.get('/user/:userId/file/:fileId',
+            authenticateMiddleware([{"jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(UserFileController)),
+            ...(fetchMiddlewares<RequestHandler>(UserFileController.prototype.downloadFile)),
+
+            async function UserFileController_downloadFile(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsUserFileController_downloadFile, request, response });
+
+                const controller = new UserFileController();
+
+              await templateService.apiHandler({
+                methodName: 'downloadFile',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsInfoController_getInfo: Record<string, TsoaRoute.ParameterSchema> = {
         };
         app.get('/info',
@@ -336,7 +466,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 file: {"in":"formData","name":"file","required":true,"dataType":"file"},
         };
         app.post('/films/:filmId/cover',
-            authenticateMiddleware([{"jwt":["create:film"]}]),
+            authenticateMiddleware([{"jwt":["admin"]}]),
             upload.fields([
                 {
                     name: "file",
@@ -373,7 +503,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 filmId: {"in":"path","name":"filmId","required":true,"dataType":"double"},
         };
         app.get('/films/:filmId/cover',
-            authenticateMiddleware([{"jwt":["read:films"]}]),
+            authenticateMiddleware([{"jwt":["user","admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(FilmCoverController)),
             ...(fetchMiddlewares<RequestHandler>(FilmCoverController.prototype.getCover)),
 
@@ -404,7 +534,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 filmId: {"in":"path","name":"filmId","required":true,"dataType":"double"},
         };
         app.delete('/films/:filmId/cover',
-            authenticateMiddleware([{"jwt":["delete:film"]}]),
+            authenticateMiddleware([{"jwt":["admin"]}]),
             ...(fetchMiddlewares<RequestHandler>(FilmCoverController)),
             ...(fetchMiddlewares<RequestHandler>(FilmCoverController.prototype.deleteCover)),
 
@@ -434,6 +564,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         const argsFilmController_getFilms: Record<string, TsoaRoute.ParameterSchema> = {
                 page: {"default":1,"in":"query","name":"page","dataType":"double"},
                 pageSize: {"default":10,"in":"query","name":"pageSize","dataType":"double"},
+                limit: {"in":"query","name":"limit","dataType":"double"},
         };
         app.get('/films',
             ...(fetchMiddlewares<RequestHandler>(FilmController)),
@@ -481,6 +612,36 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
 
               await templateService.apiHandler({
                 methodName: 'getFilmById',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 200,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsFilmController_getFilmActors: Record<string, TsoaRoute.ParameterSchema> = {
+                id: {"in":"path","name":"id","required":true,"dataType":"double"},
+        };
+        app.get('/films/:id/actors',
+            ...(fetchMiddlewares<RequestHandler>(FilmController)),
+            ...(fetchMiddlewares<RequestHandler>(FilmController.prototype.getFilmActors)),
+
+            async function FilmController_getFilmActors(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsFilmController_getFilmActors, request, response });
+
+                const controller = new FilmController();
+
+              await templateService.apiHandler({
+                methodName: 'getFilmActors',
                 controller,
                 response,
                 next,
@@ -651,7 +812,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsAuthController_register: Record<string, TsoaRoute.ParameterSchema> = {
-                registerRequest: {"in":"body","name":"registerRequest","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"role":{"dataType":"string","required":true},"password":{"dataType":"string","required":true},"email":{"dataType":"string","required":true}}},
+                registerRequest: {"in":"body","name":"registerRequest","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"password":{"dataType":"string","required":true},"email":{"dataType":"string","required":true},"username":{"dataType":"string","required":true}}},
         };
         app.post('/auth/register',
             ...(fetchMiddlewares<RequestHandler>(AuthController)),
@@ -703,7 +864,7 @@ export function RegisterRoutes(app: Router,opts?:{multer?:ReturnType<typeof mult
                 response,
                 next,
                 validatedArgs,
-                successStatus: undefined,
+                successStatus: 200,
               });
             } catch (err) {
                 return next(err);
