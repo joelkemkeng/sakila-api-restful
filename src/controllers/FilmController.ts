@@ -70,9 +70,12 @@ export class FilmController {
   @SuccessResponse(200, "Liste des films récupérée avec succès")
   async getFilms(
     @Query() page: number = 1, 
-    @Query() pageSize: number = 10
+    @Query() pageSize: number = 10,
+    @Query() limit?: number
   ): Promise<PaginatedFilms> {
-    const offset = (page - 1) * pageSize;
+    // Support pour le paramètre 'limit' en alias de 'pageSize'
+    const actualPageSize = limit || pageSize;
+    const offset = (page - 1) * actualPageSize;
     
     // Récupérer le nombre total de films
     const [countResult] = await this.db.query<RowDataPacket[]>(
@@ -83,14 +86,14 @@ export class FilmController {
     // Récupérer les films avec pagination
     const [films] = await this.db.query<RowDataPacket[]>(
       'SELECT * FROM film LIMIT ? OFFSET ?',
-      [pageSize, offset]
+      [actualPageSize, offset]
     );
     
     return {
       data: films as Film[],
       total,
       page,
-      pageSize
+      pageSize: actualPageSize
     };
   }
   
@@ -111,6 +114,25 @@ export class FilmController {
     }
     
     return films[0] as Film;
+  }
+
+  /**
+   * Récupère les acteurs d'un film
+   * @param id Identifiant du film
+   */
+  @Get('{id}/actors')
+  @SuccessResponse(200, "Acteurs du film récupérés avec succès")
+  async getFilmActors(@Path() id: number): Promise<any[]> {
+    const [actors] = await this.db.query<RowDataPacket[]>(
+      `SELECT a.actor_id, a.first_name, a.last_name
+       FROM actor a
+       JOIN film_actor fa ON a.actor_id = fa.actor_id
+       WHERE fa.film_id = ?
+       ORDER BY a.first_name, a.last_name`,
+      [id]
+    );
+    
+    return actors;
   }
   
   /**

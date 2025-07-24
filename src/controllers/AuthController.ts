@@ -1,4 +1,3 @@
-import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { DB } from "../utility/ORM/DB";
 import { RowDataPacket, ResultSetHeader } from 'mysql2';
@@ -7,9 +6,8 @@ import { ApiError } from "../utility/error/ApiError";
 import { ErrorCode } from "../utility/error/ErrorCode";
 import { Controller, Route, Post, Body, Get, Security, Request, Tags, SuccessResponse } from "tsoa";
 import { IRefreshToken } from "utility/auth/IAccessToken";
-
-// Définition de la constante JWT_SECRET directement dans le fichier
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-should-be-in-env-file';
+import { JWT } from "../utility/JWT/JWT";
+import { JWT_ACCESS_AUD, JWT_ISSUER } from "../utility/JWT/JWTConstants";
 
 /**
  * Contrôleur de gestion de l'authentification
@@ -68,8 +66,8 @@ export class AuthController extends Controller {
         role: user.role
       };
       
-      const accessToken = this.generateAccessToken(userPayload);
-      const refreshToken = this.generateRefreshToken(userPayload);
+      const accessToken = await this.generateAccessToken(userPayload);
+      const refreshToken = await this.generateRefreshToken(userPayload);
 
       // Sauvegarder le token de rafraîchissement
       await this.saveRefreshToken(user.user_id, refreshToken);
@@ -128,8 +126,8 @@ export class AuthController extends Controller {
         role: user.role
       };
       
-      const accessToken = this.generateAccessToken(userPayload);
-      const refreshToken = this.generateRefreshToken(userPayload);
+      const accessToken = await this.generateAccessToken(userPayload);
+      const refreshToken = await this.generateRefreshToken(userPayload);
 
       // Sauvegarder le token de rafraîchissement
       await this.saveRefreshToken(user.user_id, refreshToken);
@@ -168,7 +166,11 @@ export class AuthController extends Controller {
       
       // Vérifier et décoder le token
       try {
-        const decoded = jwt.verify(refreshToken, JWT_SECRET) as IUserPayload;
+        const jwt = new JWT();
+        const decoded = await jwt.decodeAndVerify<IUserPayload>(refreshToken, {
+          issuer: JWT_ISSUER,
+          audience: JWT_ACCESS_AUD
+        });
         
         // Vérifier que l'utilisateur associé au token existe toujours
         const [users] = await this.db.query<RowDataPacket[]>(
@@ -190,7 +192,7 @@ export class AuthController extends Controller {
           role: user.role
         };
         
-        const newAccessToken = this.generateAccessToken(userPayload);
+        const newAccessToken = await this.generateAccessToken(userPayload);
         
         return { token: newAccessToken };
       } catch (error) {
@@ -224,7 +226,11 @@ export class AuthController extends Controller {
     const { refreshToken } = logoutRequest;
     try {
       // Vérifier que le token appartient bien à l'utilisateur courant
-      const decoded = jwt.verify(refreshToken, JWT_SECRET) as IUserPayload;
+      const jwt = new JWT();
+      const decoded = await jwt.decodeAndVerify<IUserPayload>(refreshToken, {
+        issuer: JWT_ISSUER,
+        audience: JWT_ACCESS_AUD
+      });
       
       if (decoded.user_id !== request.user.user_id) {
         return { success: false };
@@ -247,8 +253,13 @@ export class AuthController extends Controller {
    * @param user Utilisateur
    * @returns Token JWT
    */
-  private generateAccessToken(user: IUserPayload): string {
-    return jwt.sign(user, JWT_SECRET, { expiresIn: '1h' });
+  private async generateAccessToken(user: IUserPayload): Promise<string> {
+    const jwt = new JWT();
+    return await jwt.create(user, {
+      expiresIn: '1h',
+      issuer: JWT_ISSUER,
+      audience: JWT_ACCESS_AUD
+    });
   }
 
   /**
@@ -256,8 +267,13 @@ export class AuthController extends Controller {
    * @param user Utilisateur
    * @returns Token JWT
    */
-  private generateRefreshToken(user: IUserPayload): string {
-    return jwt.sign(user, JWT_SECRET, { expiresIn: '7d' });
+  private async generateRefreshToken(user: IUserPayload): Promise<string> {
+    const jwt = new JWT();
+    return await jwt.create(user, {
+      expiresIn: '7d',
+      issuer: JWT_ISSUER,
+      audience: JWT_ACCESS_AUD
+    });
   }
 
   /**
